@@ -1,0 +1,73 @@
+.login
+    background: black
+    height: 100vh
+    display: flex
+    justify-content: center
+    align-items: center
+
+    .login-box
+        width: max-content
+        background: #262626
+        padding-bottom: 40px
+        border-radius: 20px
+
+        img
+            border-radius: 20px
+
+        form
+            display: flex
+            justify-content: center
+            align-items: center
+            flex-direction: column
+
+            input, button
+                width: 300px
+                border-radius: 5px
+                border: none
+
+            .password-field
+                margin-top: 20px
+
+            input
+                padding: 10px
+
+                &:focus-visible
+                    outline: none
+
+            button
+                border-radius: 8px
+                padding: 7px
+                margin-top: 30px
+                margin-bottom: 20px
+                background: #71BE58
+                color: #F8FCF7
+                font-size: 16px
+                cursor: pointer
+
+        a
+            font-size: 12px
+            color: #8D8C8C
+
+.error
+    display: none
+
+.error-active
+    display: block
+    color: #f44336
+    margin-top: 2px
+    font-size: 12px
+    text-align: center
+
+@media all and (max-width:500px)
+    .login .login-box img
+        width: 99%
+
+@media all and (max-width:340px)
+    .login .login-box form
+        input, button
+            width: 250px
+
+@media all and (max-width:270px)
+    .login .login-box form
+        input, button
+            width: 200px
