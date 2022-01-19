@@ -17,14 +17,14 @@ exports.tableData = async (req, res) => {
     }
 };
 
-exports.createTableData = (req, res) =>
-    dbQuery.createDB(dataConverting(req.body.myData), req.body.user);
+exports.createTableData = async (req, res) =>
+    await dbQuery.createDB(dataConverting(req.body.myData), req.body.user);
 
-exports.readTableData = (req, res) => dbQuery.readDb(res);
+exports.readTableData = async (req, res) => await dbQuery.readDb(res);
 
-exports.updateTableData = (req, res) =>
-    dbQuery.updateDb(dataConverting(req.body.myData), req.body.user);
+exports.updateTableData = async (req, res) =>
+    await dbQuery.updateDb(dataConverting(req.body.myData), req.body.user);
 
 // exports.deleteTableData = (req, res) => dbQuery.deleteDb(req.params.id, res, req.body.user);
-exports.deleteTableData = (req, res) =>
-    dbQuery.deleteDb(req.body.id, req.body.user, res);
+exports.deleteTableData = async (req, res) =>
+    await dbQuery.deleteDb(req.body.id, req.body.user, res);

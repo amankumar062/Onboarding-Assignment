@@ -1,10 +1,9 @@
 import { useState, useEffect } from "react";
 import { Navigate } from "react-router-dom";
-import { createUser } from "../utlis/user.api";
+import { createUser } from "../../utlis/user.api";
+import "./Login.sass";
 
-import "../style/login.sass";
-
-export default function Login({ user }) {
+export default function Login({ setuser }) {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [usernameValid, setUsernameValid] = useState(true);
@@ -13,12 +12,9 @@ export default function Login({ user }) {
     const [passwordError, setPasswordError] = useState();
 
     useEffect(() => {
-        const token = localStorage.getItem("token");
-        if (token === null) {
-            setLoggedIn(false);
-        }
-        if (token === process.env.REACT_APP_TOKEN) setLoggedIn(true);
-    });
+        const currentUser = localStorage.getItem("currentUser");
+        currentUser === null ? setLoggedIn(false) : setLoggedIn(true);
+    }, []);
 
     if (loggedIn === true) {
         return <Navigate to="/" />;
@@ -42,7 +38,6 @@ export default function Login({ user }) {
             password.match(passwordFormat) &&
             password === process.env.REACT_APP_PASSWORD
         ) {
-            localStorage.setItem("token", process.env.REACT_APP_TOKEN);
             setPasswordValid(true);
             setLoggedIn(true);
             return true;
@@ -71,15 +66,15 @@ export default function Login({ user }) {
         e.preventDefault();
         validateEmail();
         validatePassword();
-        if (validateEmail() && validatePassword()) {
-            const userData = { email: username, password };
-            localStorage.setItem("currentUser", userData.email.split("@")[0]);
+        if (validateEmail() && validatePassword()) await loginNow();
+    };
 
-            user(userData.email.split("@")[0]);
-            console.log(userData.email.split("@")[0]);
-            
-            await createUser(userData);
-        }
+    const loginNow = async () => {
+        const userData = { email: username, password, loginStatus: 1 };
+        const convetedUsername = userData.email.split("@")[0];
+        localStorage.setItem("currentUser", convetedUsername);
+        await setuser(convetedUsername);
+        await createUser(userData);
     };
 
     const loginForm = () => {
@@ -130,7 +125,7 @@ export default function Login({ user }) {
     };
 
     return (
-        <div className="login">
+        <div className="login" data-testid="loginComponent">
             <div className="login-box">
                 <img src="https://i.imgur.com/PaswVCY.jpg" alt="smartserv" />
                 {loginForm()}

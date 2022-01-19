@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
-import { updateRow, deleteRow } from "../utlis/table.api";
-import { capitalizeFirstLetter, dataCheck } from "../utlis/helpers";
+import { updateRow, deleteRow } from "../../utlis/table.api";
+import { capitalizeFirstLetter, dataCheck } from "../../utlis/helpers";
 
-import("../style/product.sass");
+import("./Product.sass");
 
 export default function Product({ status, currentStatus, data, update, user }) {
     const [productData, setProductData] = useState(data || {});
@@ -72,7 +72,6 @@ export default function Product({ status, currentStatus, data, update, user }) {
     };
 
     const createButtons = () => {
-        // console.log(productData);
         if (update === false) {
             return (
                 <div className="btns">
@@ -107,7 +106,7 @@ export default function Product({ status, currentStatus, data, update, user }) {
     };
 
     return (
-        <div className={status ? "editData editData__active" : "editData"}>
+        <div className={status ? "editData editData__active" : "editData"} data-testid="productComponent">
             <p className="title">
                 {update ? "Update Product" : "Create Product"}
             </p>

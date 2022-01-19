@@ -23,3 +23,11 @@ exports.dataConverting = (myData) => {
             : allData.push(myData[key]);
     return allData;
 };
+
+exports.currentTime = () => {
+    const date = new Date();
+    const todayDate = date.toISOString().slice(0, 10);
+    const time = date.toTimeString().replace(/.*(\d{2}:\d{2}:\d{2}).*/, "$1");
+    const formatedDate = todayDate + " " + time;
+    return formatedDate;
+};

@@ -1,7 +1,7 @@
 const db = require("../../../db");
+const { currentTime } = require("../utils/table.helpers");
 
 exports.insertDb = (data) => {
-    // console.log(data);
     let query =
         "INSERT IGNORE INTO productlist (id, subcategory, title, price, popularity) VALUES ?";
     db.query(query, [data], (err, result) =>
@@ -22,23 +22,22 @@ exports.createDB = (myData, user) => {
 };
 
 exports.readDb = (res) => {
-    // Todo: Remove Limit
     let query =
-        "SELECT id,subcategory,title,price,popularity FROM productlist WHERE deletedBy IS NULL LIMIT 500";
+        "SELECT id,subcategory,title,price,popularity FROM productlist WHERE deletedBy IS NULL";
     db.query(query, (err, result) =>
         err ? console.log(err) : res.send(result)
     );
 };
 
 exports.updateDb = (myData, user) => {
-    console.log(user);
+    const time = currentTime();
     const [id, subcategory, title, price, popularity] = myData;
     let query =
-        "UPDATE productlist SET subcategory = ?, title = ?, price = ?, popularity = ?, modifyBy = ? WHERE id = ?";
+        "UPDATE productlist SET subcategory = ?, title = ?, price = ?, popularity = ?, modifyBy = ?, modifyAt = ? WHERE id = ?";
 
     db.query(
         query,
-        [subcategory, title, price, popularity, user, id],
+        [subcategory, title, price, popularity, user, time, id],
         (err, result) => (err ? console.log(err) : console.log("Updated!"))
     );
 };

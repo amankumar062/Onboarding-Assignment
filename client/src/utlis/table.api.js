@@ -3,19 +3,9 @@ const endpoint = process.env.REACT_APP_ENDPOINT;
 
 export const updateRow = async (myData, update, user) => {
     try {
-        if (update) {
-            const response = await Axios.put(`${endpoint}/update`, {
-                myData,
-                user,
-            });
-            console.log("Update Response: ", response);
-        } else {
-            const response = await Axios.post(`${endpoint}/create`, {
-                myData,
-                user,
-            });
-            console.log("Create Response: ", response);
-        }
+        update
+            ? await Axios.put(`${endpoint}/update`, { myData, user })
+            : await Axios.post(`${endpoint}/create`, { myData, user });
     } catch (error) {
         console.erro("Update Row Error: ", error);
     }
@@ -33,8 +23,7 @@ export const fetchTable = async () => {
 export const deleteRow = async (id, user) => {
     try {
         // const response = await Axios.delete(`${endpoint}/delete/${id}`);
-        const response = await Axios.put(`${endpoint}/delete`, { id, user });
-        console.log("Delete Response: ", response);
+        await Axios.put(`${endpoint}/delete`, { id, user });
     } catch (error) {
         console.error("Delete Error: ", error);
     }

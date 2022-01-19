@@ -1,7 +1,8 @@
 import { useState, useEffect, createRef } from "react";
-import Product from "./Product";
-import { fetchTable } from "../utlis/table.api";
-import { binarySearch } from "../utlis/helpers";
+import Product from "../Product/Product";
+import { fetchTable } from "../../utlis/table.api";
+import { binarySearch } from "../../utlis/helpers";
+import Loading from "../Loading/Loading";
 
 export default function Table({ loggedIn, user }) {
     const [tableData, setTableData] = useState([]);
@@ -30,7 +31,7 @@ export default function Table({ loggedIn, user }) {
     }, [length]);
 
     const isLoggedIn = (type, index) => {
-        if (loggedIn && type == "row")
+        if (loggedIn && type === "row")
             return (
                 <td>
                     <i
@@ -40,9 +41,9 @@ export default function Table({ loggedIn, user }) {
                     ></i>
                 </td>
             );
-        if (loggedIn && type == "head")
+        if (loggedIn && type === "head")
             return (
-                <th>
+                <th data-testid="loggedInHead">
                     <i
                         onClick={createForm}
                         title="New"
@@ -65,7 +66,6 @@ export default function Table({ loggedIn, user }) {
         setActive(!active);
         setShowData(obj);
         setUpdateData(false);
-        console.log(obj);
         obj = null;
     };
 
@@ -76,8 +76,18 @@ export default function Table({ loggedIn, user }) {
             obj[tableHead[i]] = refs[index].current.children[i].innerText;
         setShowData(obj);
         setUpdateData(true);
-        console.log(obj);
         obj = null;
+    };
+
+    const checkLoaded = () => {
+        let data = tableData;
+        if (data.length) {
+            return (
+                <table cellPadding="0" cellSpacing="0" border="0">
+                    <tbody className="tbody">{createTableRow(data)}</tbody>
+                </table>
+            );
+        } else return <Loading />;
     };
 
     const createTableHead = (data) => {
@@ -86,27 +96,19 @@ export default function Table({ loggedIn, user }) {
         setTableHead(temp);
     };
 
-    const createTableRow = () => {
-        let data = tableData;
-        if (data.length) {
-            data.sort((a, b) => (a.popularity > b.popularity ? 1 : -1));
+    const createTableRow = (data) => {
+        data.sort((a, b) => (a.popularity > b.popularity ? 1 : -1));
 
-            return data.map((arr, index) => (
-                <tr className="tr-data" key={arr.id} ref={refs[index]}>
-                    <td>{arr.id}</td>
-                    <td>{arr.subcategory}</td>
-                    <td>{arr.title}</td>
-                    <td>{arr.price}</td>
-                    <td>{arr.popularity}</td>
-                    {isLoggedIn("row", index)}
-                </tr>
-            ));
-        }
-        return (
-            <tr>
-                <td>Loading</td>
+        return data.map((arr, index) => (
+            <tr className="tr-data" key={arr.id} ref={refs[index]}>
+                <td>{arr.id}</td>
+                <td>{arr.subcategory}</td>
+                <td>{arr.title}</td>
+                <td>{arr.price}</td>
+                <td>{arr.popularity}</td>
+                {isLoggedIn("row", index)}
             </tr>
-        );
+        ));
     };
 
     const createTable = () => (
@@ -123,11 +125,7 @@ export default function Table({ loggedIn, user }) {
                     </thead>
                 </table>
             </div>
-            <div className="tbl-content">
-                <table cellPadding="0" cellSpacing="0" border="0">
-                    <tbody className="tbody">{createTableRow()}</tbody>
-                </table>
-            </div>
+            <div className="tbl-content">{checkLoaded()}</div>
         </div>
     );
 
@@ -147,7 +145,7 @@ export default function Table({ loggedIn, user }) {
     const currentStatus = (el) => setActive(el);
 
     return (
-        <div className="table-data">
+        <div className="table-data" data-testid="tableComponent">
             {createTable()}
             {product()}
         </div>

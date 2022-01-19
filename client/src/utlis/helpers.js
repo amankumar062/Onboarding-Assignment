@@ -4,7 +4,7 @@ export const binarySearch = (arr, key) => {
 
     while (left <= right) {
         let mid = Math.floor(left + (right - left) / 2);
-        if (arr[mid].id == key) return mid;
+        if (arr[mid].id === key) return mid;
         if (arr[mid].id < key) left = mid + 1;
         else right = mid - 1;
     }
@@ -45,7 +45,6 @@ export const dataCheck = (productData, setErrorMsg) => {
         setErrorMsg("Subcategory can only be string");
         return 0;
     } else if (!isNumber(popularity)) {
-        console.log(isNumber(popularity));
         setErrorMsg("Popularity can only be number");
         return 0;
     } else if (!isNumber(price)) {
