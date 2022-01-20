@@ -16,6 +16,7 @@ export default function Table({ loggedIn, user }) {
     useEffect(() => {
         (async () => {
             const data = await fetchTable();
+            // console.log(data)
             await setTableData(data);
             await createTableHead(data);
             await setLength(data.length);
@@ -92,23 +93,26 @@ export default function Table({ loggedIn, user }) {
 
     const createTableHead = (data) => {
         let temp = [];
-        for (const key in data[0]) temp.push(key);
+        for (const key in data[0]) if (key !== "deletedBy") temp.push(key);
         setTableHead(temp);
     };
 
     const createTableRow = (data) => {
         data.sort((a, b) => (a.popularity > b.popularity ? 1 : -1));
 
-        return data.map((arr, index) => (
-            <tr className="tr-data" key={arr.id} ref={refs[index]}>
-                <td>{arr.id}</td>
-                <td>{arr.subcategory}</td>
-                <td>{arr.title}</td>
-                <td>{arr.price}</td>
-                <td>{arr.popularity}</td>
-                {isLoggedIn("row", index)}
-            </tr>
-        ));
+        return data.map(
+            (arr, index) =>
+                arr.deletedBy === null && (
+                    <tr className="tr-data" key={arr.id} ref={refs[index]}>
+                        <td>{arr.id}</td>
+                        <td>{arr.subcategory}</td>
+                        <td>{arr.title}</td>
+                        <td>{arr.price}</td>
+                        <td>{arr.popularity}</td>
+                        {isLoggedIn("row", index)}
+                    </tr>
+                )
+        );
     };
 
     const createTable = () => (

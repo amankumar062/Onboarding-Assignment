@@ -1,16 +1,20 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { logoutUser } from "../../utlis/user.api";
+import Cookies from "universal-cookie";
+// import Cookies from 'js-cookie';
 
 import Table from "../Table/Table";
 import "./Main.sass";
 
 export default function Main({ user, setuser }) {
+    const cookies = new Cookies();
     const [loggedIn, setLoggedIn] = useState(false);
 
     useEffect(() => checkIsLoggedIn());
 
-    const checkIsLoggedIn = () => {
+    const checkIsLoggedIn = async () => {
+        console.log(cookies);
         const currentUser = localStorage.getItem("currentUser");
         if (currentUser !== null) {
             setLoggedIn(true);
@@ -19,11 +23,13 @@ export default function Main({ user, setuser }) {
     };
 
     const logout = async () => {
-        localStorage.removeItem("currentUser");
-        setuser(-1);
-        setLoggedIn(false);
-        await logoutUser(user);
-        checkIsLoggedIn();
+        const status = await logoutUser(user);
+        if (status === 200) {
+            localStorage.removeItem("currentUser");
+            setuser(-1);
+            setLoggedIn(false);
+            checkIsLoggedIn();
+        }
     };
 
     const Login_Logout_Btn = () => {

@@ -23,7 +23,7 @@ exports.createDB = (myData, user) => {
 
 exports.readDb = (res) => {
     let query =
-        "SELECT id,subcategory,title,price,popularity FROM productlist WHERE deletedBy IS NULL";
+        "SELECT id,subcategory,title,price,popularity, deletedBy FROM productlist ";
     db.query(query, (err, result) =>
         err ? console.log(err) : res.send(result)
     );

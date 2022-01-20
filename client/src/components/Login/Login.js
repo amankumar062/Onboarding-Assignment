@@ -70,11 +70,13 @@ export default function Login({ setuser }) {
     };
 
     const loginNow = async () => {
-        const userData = { email: username, password, loginStatus: 1 };
+        const userData = { email: username, password };
         const convetedUsername = userData.email.split("@")[0];
-        localStorage.setItem("currentUser", convetedUsername);
-        await setuser(convetedUsername);
-        await createUser(userData);
+        const loginResponse = await createUser(userData);
+        if (loginResponse === 200) {
+            localStorage.setItem("currentUser", convetedUsername);
+            setuser(convetedUsername);
+        }
     };
 
     const loginForm = () => {

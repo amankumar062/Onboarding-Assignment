@@ -7,6 +7,7 @@ let allData = [];
 
 exports.tableData = async (req, res) => {
     try {
+        console.log(req.cookies)
         const response = await fetch(url);
         const data = await response.json();
         allData = await dataSanitizier(data);
