@@ -7,16 +7,16 @@ import "./App.sass";
 
 export default function App() {
     const [user, setUser] = useState(-1);
-    const currentUser = (user) => setUser(user);
+    const setCurrentUser = (user) => setUser(user);
 
     return (
         <BrowserRouter>
             <Routes>
-                <Route exact path="/" element={<Main user={user} setuser={currentUser} />} />
+                <Route exact path="/" element={<Main user={user} setCurrentUser={setCurrentUser} />} />
                 <Route
                     exact
                     path="/login"
-                    element={<Login setuser={currentUser} />}
+                    element={<Login setCurrentUser={setCurrentUser} />}
                 />
             </Routes>
         </BrowserRouter>

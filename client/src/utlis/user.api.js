@@ -11,17 +11,17 @@ export const createUser = async (userData) => {
                 withCredentials: true,
             }
         );
-        return response.status;
+        return response
     } catch (error) {
         console.error("CreateUser Error: ", error);
     }
 };
 
-export const logoutUser = async (username) => {
+export const logoutUser = async (userId) => {
     try {
         const response = await Axios.post(
             `${endpoint}/logoutUser`,
-            { username },
+            { userId },
             {
                 method: "POST",
                 withCredentials: true,

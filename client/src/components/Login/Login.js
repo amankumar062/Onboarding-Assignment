@@ -1,15 +1,17 @@
 import { useState, useEffect } from "react";
 import { Navigate } from "react-router-dom";
 import { createUser } from "../../utlis/user.api";
+import LoadingIcon from "../Loading/LoadingIcon/LoadingIcon";
 import "./Login.sass";
 
-export default function Login({ setuser }) {
+export default function Login({ setCurrentUser }) {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [usernameValid, setUsernameValid] = useState(true);
     const [passwordValid, setPasswordValid] = useState();
     const [loggedIn, setLoggedIn] = useState(false);
     const [passwordError, setPasswordError] = useState();
+    const [progress, setProgress] = useState(false);
 
     useEffect(() => {
         const currentUser = localStorage.getItem("currentUser");
@@ -39,43 +41,53 @@ export default function Login({ setuser }) {
             password === process.env.REACT_APP_PASSWORD
         ) {
             setPasswordValid(true);
-            setLoggedIn(true);
             return true;
         } else if (
             password.match(passwordFormat) === null &&
             password !== process.env.REACT_APP_PASSWORD
         ) {
-            setPasswordError(
+            passwordFail(
                 "Password must contain an uppercase letter a number and special character @"
             );
-            setPasswordValid(false);
-            setLoggedIn(false);
-            return false;
         } else if (
             password.match(passwordFormat) &&
             password !== process.env.REACT_APP_PASSWORD
         ) {
-            setPasswordError("Incorrect Password. Try Again!");
-            setPasswordValid(false);
-            setLoggedIn(false);
-            return false;
+            passwordFail("Incorrect Password. Try Again!");
         }
     };
 
+    const passwordFail = (error) => {
+        // setProgress(!progress);
+        setPasswordError(error);
+        setPasswordValid(false);
+        setLoggedIn(false);
+        return false;
+    };
+
     const onSubmit = async (e) => {
+        setProgress(true);
         e.preventDefault();
-        validateEmail();
-        validatePassword();
-        if (validateEmail() && validatePassword()) await loginNow();
+        let emailValid = validateEmail();
+        let passwordValid = validatePassword();
+
+        if (emailValid && passwordValid) await loginNow();
+        if (!emailValid || !passwordValid) setProgress(false);
     };
 
     const loginNow = async () => {
-        const userData = { email: username, password };
-        const convetedUsername = userData.email.split("@")[0];
+        const userData = {
+            userName: username.split("@")[0],
+            email: username,
+            password,
+        };
+
         const loginResponse = await createUser(userData);
-        if (loginResponse === 200) {
-            localStorage.setItem("currentUser", convetedUsername);
-            setuser(convetedUsername);
+        if (loginResponse.status === 200) {
+            localStorage.setItem("currentUser", loginResponse.data.id);
+            setCurrentUser(loginResponse.data.id);
+            setLoggedIn(true);
+            setProgress(false);
         }
     };
 
@@ -118,7 +130,13 @@ export default function Login({ setuser }) {
                 >
                     {passwordError}
                 </span>
-                <button type="submit">Login</button>
+                {progress ? (
+                    <button type="submit">
+                        <LoadingIcon color="white" />
+                    </button>
+                ) : (
+                    <button type="submit">Login</button>
+                )}
                 <a href="mailto:support@smartserv.io?subject=Forgot Password&body=Hi, I have forgotten my smartserv password my id is: {your id} can you please reset my password. Thank you">
                     ForgotPassword
                 </a>

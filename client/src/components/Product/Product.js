@@ -1,12 +1,15 @@
 import { useState, useEffect } from "react";
 import { updateRow, deleteRow } from "../../utlis/table.api";
 import { capitalizeFirstLetter, dataCheck } from "../../utlis/helpers";
+import LoadingIcon from "../Loading/LoadingIcon/LoadingIcon";
 
 import("./Product.sass");
 
 export default function Product({ status, currentStatus, data, update, user }) {
     const [productData, setProductData] = useState(data || {});
     const [errorMsg, setErrorMsg] = useState("");
+    const [updateProgress, setUpdateProgresss] = useState(false);
+    const [deleteProgress, setDeleteProgress] = useState(false);
 
     useEffect(() => setProductData(data), [data]);
 
@@ -23,14 +26,38 @@ export default function Product({ status, currentStatus, data, update, user }) {
     };
 
     const deleteData = async (e) => {
-        // e.preventDefault();
-        await deleteRow(productData.id, getCurrentUser());
+        e.preventDefault();
+        setDeleteProgress(true);
+
+        const response = await deleteRow(productData.id, getCurrentUser());
+
+        if (response.status === 200) {
+            setDeleteProgress(false);
+            window.location.reload();
+        }
+
+        if (response.data === "Error") localStorage.removeItem("currentUser");
     };
 
     const passData = async (e) => {
-        if (dataCheck(productData, setErrorMsg) === 1)
-            await updateRow(productData, update, getCurrentUser());
-        else e.preventDefault();
+        e.preventDefault();
+        if (dataCheck(productData, setErrorMsg) === 1) {
+            setUpdateProgresss(true);
+
+            const response = await updateRow(
+                productData,
+                update,
+                getCurrentUser()
+            );
+
+            if (response.status === 200) {
+                setUpdateProgresss(false);
+                window.location.reload();
+            }
+
+            if (response.data === "Error")
+                localStorage.removeItem("currentUser");
+        }
     };
 
     const closeForm = () => {
@@ -83,7 +110,11 @@ export default function Product({ status, currentStatus, data, update, user }) {
                         className="btn create"
                         onClick={(e) => passData(e)}
                     >
-                        Create
+                        {!updateProgress ? (
+                            "Create"
+                        ) : (
+                            <LoadingIcon color="white" />
+                        )}
                     </button>
                 </div>
             );
@@ -95,14 +126,14 @@ export default function Product({ status, currentStatus, data, update, user }) {
                     className="btn delete"
                     onClick={(e) => deleteData(e)}
                 >
-                    Delete
+                    {!deleteProgress ? "Delete" : <LoadingIcon color="white" />}
                 </button>
                 <button
                     type="submit"
                     className="btn update"
                     onClick={(e) => passData(e)}
                 >
-                    Update
+                    {!updateProgress ? "Update" : <LoadingIcon color="white" />}
                 </button>
             </div>
         );

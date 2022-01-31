@@ -1,0 +1,21 @@
+$bluebell: #979fd0
+$white: #F1F5F6
+
+.donut
+    margin: 0
+    width: 25px
+    height: 25px
+    border-radius: 50%
+    border: 3px solid rgba($bluebell, 0.3)
+    border-top-color: $bluebell
+    animation: 1.5s spin infinite linear
+
+.white
+    width: 16px
+    height: 16px
+    border: 2px solid rgba($white, 0.3)
+    border-top-color: $white
+
+@keyframes spin
+    to
+        transform: rotate(360deg)

@@ -4,7 +4,7 @@ const endpoint = process.env.REACT_APP_ENDPOINT;
 export const updateRow = async (myData, update, user) => {
     try {
         if (update) {
-            await Axios.put(
+            const response = await Axios.put(
                 `${endpoint}/update`,
                 { myData, user },
                 {
@@ -12,8 +12,9 @@ export const updateRow = async (myData, update, user) => {
                     withCredentials: true,
                 }
             );
+            return response;
         } else {
-            await Axios.post(
+            const response = await Axios.post(
                 `${endpoint}/create`,
                 { myData, user },
                 {
@@ -21,6 +22,7 @@ export const updateRow = async (myData, update, user) => {
                     withCredentials: true,
                 }
             );
+            return response;
         }
     } catch (error) {
         console.error("Update Row Error: ", error);
@@ -39,7 +41,7 @@ export const fetchTable = async () => {
 export const deleteRow = async (id, user) => {
     try {
         // const response = await Axios.delete(`${endpoint}/delete/${id}`);
-        await Axios.put(
+        const response = await Axios.put(
             `${endpoint}/delete`,
             { id, user },
             {
@@ -47,6 +49,8 @@ export const deleteRow = async (id, user) => {
                 withCredentials: true,
             }
         );
+
+        return response;
     } catch (error) {
         console.error("Delete Error: ", error);
     }

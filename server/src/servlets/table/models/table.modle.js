@@ -9,7 +9,7 @@ exports.insertDb = (data) => {
     );
 };
 
-exports.createDB = (myData, user) => {
+exports.createDB = (myData, user, res) => {
     const [id, subcategory, title, price, popularity] = myData;
 
     let query =
@@ -17,7 +17,13 @@ exports.createDB = (myData, user) => {
     db.query(
         query,
         [id, subcategory, title, price, popularity, user],
-        (err, result) => (err ? console.log(err) : console.log("Created!"))
+        (err, result) => {
+            if (err) console.log(err);
+            else {
+                res.send(result);
+                console.log("Created!");
+            }
+        }
     );
 };
 
@@ -29,7 +35,7 @@ exports.readDb = (res) => {
     );
 };
 
-exports.updateDb = (myData, user) => {
+exports.updateDb = (myData, user, res) => {
     const time = currentTime();
     const [id, subcategory, title, price, popularity] = myData;
     let query =
@@ -38,7 +44,13 @@ exports.updateDb = (myData, user) => {
     db.query(
         query,
         [subcategory, title, price, popularity, user, time, id],
-        (err, result) => (err ? console.log(err) : console.log("Updated!"))
+        (err, result) => {
+            if (err) console.log(err);
+            else {
+                res.send(result);
+                console.log("Updated!");
+            }
+        }
     );
 };
 

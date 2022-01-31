@@ -16,7 +16,6 @@ export default function Table({ loggedIn, user }) {
     useEffect(() => {
         (async () => {
             const data = await fetchTable();
-            // console.log(data)
             await setTableData(data);
             await createTableHead(data);
             await setLength(data.length);
@@ -98,9 +97,10 @@ export default function Table({ loggedIn, user }) {
     };
 
     const createTableRow = (data) => {
-        data.sort((a, b) => (a.popularity > b.popularity ? 1 : -1));
+        let tempData = [...data];
+        tempData.sort((a, b) => (a.popularity > b.popularity ? 1 : -1));
 
-        return data.map(
+        return tempData.map(
             (arr, index) =>
                 arr.deletedBy === null && (
                     <tr className="tr-data" key={arr.id} ref={refs[index]}>

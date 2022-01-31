@@ -1,9 +1,10 @@
+import LoadingIcon from "./LoadingIcon/LoadingIcon";
 import "./Loading.sass";
 
 export default function Loading() {
     return (
         <div className="loading" data-testid="loadingComponent">
-            <span className="donut"></span>
+            <LoadingIcon/>
             <span> Loading </span>
         </div>
     );

@@ -7,7 +7,6 @@ let allData = [];
 
 exports.tableData = async (req, res) => {
     try {
-        console.log(req.cookies)
         const response = await fetch(url);
         const data = await response.json();
         allData = await dataSanitizier(data);
@@ -19,12 +18,12 @@ exports.tableData = async (req, res) => {
 };
 
 exports.createTableData = async (req, res) =>
-    await dbQuery.createDB(dataConverting(req.body.myData), req.body.user);
+    await dbQuery.createDB(dataConverting(req.body.myData), req.body.user, res);
 
 exports.readTableData = async (req, res) => await dbQuery.readDb(res);
 
 exports.updateTableData = async (req, res) =>
-    await dbQuery.updateDb(dataConverting(req.body.myData), req.body.user);
+    await dbQuery.updateDb(dataConverting(req.body.myData), req.body.user, res);
 
 // exports.deleteTableData = (req, res) => dbQuery.deleteDb(req.params.id, res, req.body.user);
 exports.deleteTableData = async (req, res) =>
