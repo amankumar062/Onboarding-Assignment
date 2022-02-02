@@ -147,7 +147,7 @@ export default function Login({ setCurrentUser }) {
     return (
         <div className="login" data-testid="loginComponent">
             <div className="login-box">
-                <img src="https://i.imgur.com/PaswVCY.jpg" alt="smartserv" />
+                <img src="https://i.imgur.com/6GyYGE7.png" alt="smartserv" />
                 {loginForm()}
             </div>
         </div>

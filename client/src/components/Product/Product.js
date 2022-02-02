@@ -55,8 +55,10 @@ export default function Product({ status, currentStatus, data, update, user }) {
                 window.location.reload();
             }
 
-            if (response.data === "Error")
+            if (response.data === "Error"){
+                setUpdateProgresss(false);
                 localStorage.removeItem("currentUser");
+            }
         }
     };
 

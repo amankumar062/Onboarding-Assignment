@@ -12,7 +12,7 @@ exports.checkLoggedIn = async (req, res, next) => {
     const { user } = req.body;
 
     jwt.verify(auth_token, process.env.SECRET, function (err, decoded) {
-        if(err) if (err.name === "TokenExpiredError") res.send("Error");
+        if(err) res.send("Error");
         if (decoded?.id === parseInt(user)) next();
     });
 

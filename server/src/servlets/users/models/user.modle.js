@@ -8,7 +8,8 @@ const logInUser = (result, id, token, res) => {
     res.send(result);
 };
 
-const newUser = (id, userName, email, password, token, res) => {
+const newUser = (id, userName, email, password, res) => {
+    const token = createToken(id, userName, email, password);
     let query =
         "INSERT INTO USERS (id, username, email, password, token) VALUES (?, ?, ?, ?, ?)";
 
@@ -55,15 +56,14 @@ const getNewId = () => {
 };
 
 exports.createUser = (userName, email, password, res) => {
-    let id = 1,
-        query = "SELECT COUNT(*) AS userCount FROM USERS";
-    const token = createToken(id, userName, email, password);
+    let id = 1;
+    let query = "SELECT COUNT(*) AS userCount FROM USERS";
 
     db.query(query, async (err, result) => {
         try {
             if (err) console.log(err);
             else if (result[0].userCount === 0) {
-                await newUser(1, userName, email, password, token, res);
+                await newUser(1, userName, email, password, res);
             } else {
                 query = "SELECT email FROM USERS WHERE email = ?";
 
@@ -71,17 +71,15 @@ exports.createUser = (userName, email, password, res) => {
                     if (err) console.log(err);
                     if (result.length == 0) {
                         id = await getNewId();
-                        await newUser(
+                        await newUser(id, userName, email, password, res);
+                    } else {
+                        id = await findUserId(email);
+                        const token = createToken(
                             id,
                             userName,
                             email,
-                            password,
-                            token,
-                            res
+                            password
                         );
-                    } else {
-                        id = await findUserId(email);
-
                         query = "UPDATE USERS SET token = ? WHERE email = ?";
                         db.query(query, [token, email], (err, result) =>
                             err
